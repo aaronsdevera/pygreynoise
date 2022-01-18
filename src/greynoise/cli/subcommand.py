@@ -24,11 +24,14 @@ from greynoise.util import CONFIG_FILE, DEFAULT_CONFIG, save_config
 def account():
     """View information about your GreyNoise account."""
 
-
-@not_implemented_command
-def alerts():
+@click.command()
+def alerts(
+    context, api_client, api_key
+):
     """List, create, delete, and manage your GreyNoise alerts."""
 
+    # list alerts
+    click.echo(api_client.alerts())
 
 @click.command()
 @click.option("-k", "--api-key", help="Key to include in API requests")

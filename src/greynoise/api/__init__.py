@@ -47,6 +47,7 @@ class GreyNoise(object):
     EP_NOISE_CONTEXT = "noise/context/{ip_address}"
     EP_COMMUNITY_IP = "v3/community/{ip_address}"
     EP_META_METADATA = "meta/metadata"
+    EP_ALERTS = 'alerts'
     EP_PING = "ping"
     EP_RIOT = "riot/{ip_address}"
     EP_NOT_IMPLEMENTED = "request/{subcommand}"
@@ -153,7 +154,7 @@ class GreyNoise(object):
         if params is None:
             params = {}
 
-        user_agent_parts = ["GreyNoise/{}".format(__version__)]
+        user_agent_parts = ["GreyNoise/{} @aaronsdevera".format(__version__)]
         if self.integration_name:
             user_agent_parts.append("({})".format(self.integration_name))
         headers = {
@@ -210,6 +211,17 @@ class GreyNoise(object):
             raise RequestFailure(response.status_code, body)
 
         return body
+
+    def alerts(self):
+        """Retrieve alerts active for the account"""
+        if self.offering == "community":
+            print(f'[LOG] starting conditional route for {self.offering}')
+            response = {"message": "Alerts not supported with Community offering"}
+            return response
+        if self.offering == "enterprise":
+            endpoint = self.EP_ALERTS
+            response = self._request(endpoint, method="get")
+            return response
 
     def analyze(self, text):
         """Aggregate stats related to IP addresses from a given text.
